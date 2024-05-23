@@ -6,10 +6,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static bool gameOver = false;
+
     public static bool winCondition = false;
+
     public static int actualPlayer = 0;
 
     public List<Controller_Target> targets;
+
     public List<Controller_Player> players;
 
     void Start()
@@ -34,11 +37,12 @@ public class GameManager : MonoBehaviour
             if (t.playerOnTarget)
             {
                 i++;
+                if (i >= 8) // Salida anticipada si se cumplen 8 objetivos
+                {
+                    winCondition = true;
+                    break; // Opcional: usa break si necesitas más lógica después del bucle
+                }
             }
-        }
-        if (i >= 8)
-        {
-            winCondition = true;
         }
     }
 
@@ -46,27 +50,26 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            actualPlayer = (actualPlayer <= 0) ? players.Count - 1 : actualPlayer - 1;
+            actualPlayer = (actualPlayer - 1 + players.Count) % players.Count; // Lógica de cambio de jugador mejorada
             SetConstraits();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            actualPlayer = (actualPlayer >= players.Count - 1) ? 0 : actualPlayer + 1;
-            SetConstraits();
+            actualPlayer = (actualPlayer + 1) % players.Count; // Lógica de cambio de jugador mejorada
         }
     }
 
     private void SetConstraits()
     {
-        for (int i = 0; i < players.Count; i++)
+        foreach (Controller_Player p in players)
         {
-            if (i == actualPlayer)
+            if (p == players[actualPlayer])
             {
-                players[i].rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                p.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
             else
             {
-                players[i].rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                p.rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
         }
     }

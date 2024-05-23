@@ -19,7 +19,7 @@ public class Controller_Camera : MonoBehaviour
 
     void LateUpdate()
     {
-        if (players[GameManager.actualPlayer] != null)
+        if (players.Count > 0 && GameManager.actualPlayer < players.Count && players[GameManager.actualPlayer] != null)
         {
             Vector3 point = _camera.WorldToViewportPoint(players[GameManager.actualPlayer].transform.position);
             Vector3 delta = players[GameManager.actualPlayer].transform.position - _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
