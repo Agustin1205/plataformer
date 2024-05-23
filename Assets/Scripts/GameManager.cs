@@ -6,13 +6,10 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static bool gameOver = false;
-
     public static bool winCondition = false;
-
     public static int actualPlayer = 0;
 
     public List<Controller_Target> targets;
-
     public List<Controller_Player> players;
 
     void Start()
@@ -27,21 +24,19 @@ public class GameManager : MonoBehaviour
     {
         GetInput();
         CheckWin();
-
     }
 
     private void CheckWin()
     {
         int i = 0;
-        foreach(Controller_Target t in targets)
+        foreach (Controller_Target t in targets)
         {
             if (t.playerOnTarget)
             {
                 i++;
-                //Debug.Log(i.ToString());
             }
         }
-        if (i >= 7)
+        if (i >= 8)
         {
             winCondition = true;
         }
@@ -51,43 +46,27 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (actualPlayer <= 0)
-            {
-                actualPlayer = 6;
-                SetConstraits();
-            }
-            else
-            {
-                actualPlayer--;
-                SetConstraits();
-            }
+            actualPlayer = (actualPlayer <= 0) ? players.Count - 1 : actualPlayer - 1;
+            SetConstraits();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (actualPlayer >= 6)
-            {
-                actualPlayer = 0;
-                SetConstraits();
-            }
-            else
-            {
-                actualPlayer++;
-                SetConstraits();
-            }
+            actualPlayer = (actualPlayer >= players.Count - 1) ? 0 : actualPlayer + 1;
+            SetConstraits();
         }
     }
 
     private void SetConstraits()
     {
-        foreach(Controller_Player p in players)
+        for (int i = 0; i < players.Count; i++)
         {
-            if (p == players[actualPlayer])
+            if (i == actualPlayer)
             {
-                p.rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                players[i].rb.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
             else
             {
-                p.rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                players[i].rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
             }
         }
     }
