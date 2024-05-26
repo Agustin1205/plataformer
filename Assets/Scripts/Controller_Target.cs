@@ -17,10 +17,11 @@ public class Controller_Target : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            if (other.GetComponent<Controller_Player>().playerNumber == targetNumber)
+            Controller_Player player = other.GetComponent<Controller_Player>();
+            if (player != null && player.playerNumber == targetNumber) ;
             {
                 playerOnTarget = true;
-                //Debug.Log("P on T");
+                
             }
         }
     }
